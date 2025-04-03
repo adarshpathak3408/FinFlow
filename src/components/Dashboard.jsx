@@ -11,21 +11,27 @@ import BudgetManager from "./BudgetManager"
 import LoanCalculator from "./LoanCalculator"
 
 export default function Dashboard() {
-  const { getTotalIncome, getTotalExpense, getBalance, currency, getExpensesByCategory } =
-    useContext(TransactionContext)
+  const {
+    getTotalIncome,
+    getTotalExpense,
+    getBalance,
+    currency,
+    getExpensesByCategory,
+    convertCurrency
+  } = useContext(TransactionContext)
 
   const { isDarkMode } = useContext(ThemeContext)
   const [activeTab, setActiveTab] = useState("overview")
 
   const formatCurrency = (amount) => {
+    const convertedAmount = convertCurrency(amount)
     const formatter = new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: currency,
       minimumFractionDigits: 0,
       maximumFractionDigits: 2,
     })
-
-    return formatter.format(amount)
+    return formatter.format(convertedAmount)
   }
 
   return (
@@ -91,4 +97,3 @@ export default function Dashboard() {
     </div>
   )
 }
-

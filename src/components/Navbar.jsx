@@ -20,20 +20,20 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <DollarSign className="h-8 w-8 text-blue-500" />
-            <span className="ml-2 text-xl font-bold">ExpenseTracker</span>
+            <span className="ml-2 text-xl font-bold">FinFlow</span>
           </div>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-4">
             <ThemeSelector />
             <CurrencySelector />
-            <button
+            {/* <button
               onClick={toggleDarkMode}
               className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700"
               aria-label="Toggle dark mode"
             >
               {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </button>
+            </button> */}
           </div>
 
           {/* Mobile Menu Button */}

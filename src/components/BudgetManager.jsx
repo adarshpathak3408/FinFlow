@@ -6,14 +6,13 @@ import { Card } from "./ui/Card"
 import { AlertTriangle } from "lucide-react"
 
 export default function BudgetManager() {
-  const { categories, budgets, setBudget, transactions, currency } = useContext(TransactionContext)
+  const { categories, budgets, setBudget, transactions, currency, convertCurrency } = useContext(TransactionContext)
 
   const [newBudget, setNewBudget] = useState({
     category: "",
     amount: "",
   })
 
-  // Calculate spending for each category
   const calculateSpending = () => {
     const spending = {}
 
@@ -28,18 +27,15 @@ export default function BudgetManager() {
 
   const [spending, setSpending] = useState(calculateSpending())
 
-  // Update spending when transactions change
   useEffect(() => {
     setSpending(calculateSpending())
   }, [transactions])
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target
     setNewBudget({ ...newBudget, [name]: value })
   }
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -49,26 +45,23 @@ export default function BudgetManager() {
     }
 
     setBudget(newBudget.category, newBudget.amount)
-
     setNewBudget({
       category: "",
       amount: "",
     })
   }
 
-  // Format currency for display
   const formatCurrency = (amount) => {
+    const convertedAmount = convertCurrency(amount)
     const formatter = new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: currency,
       minimumFractionDigits: 0,
       maximumFractionDigits: 2,
     })
-
-    return formatter.format(amount)
+    return formatter.format(convertedAmount)
   }
 
-  // Calculate percentage of budget used
   const calculatePercentage = (spent, budget) => {
     if (!budget) return 0
     return Math.min(100, Math.round((spent / budget) * 100))
@@ -83,7 +76,13 @@ export default function BudgetManager() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">Category</label>
-              <select name="category" value={newBudget.category} onChange={handleChange} className="select" required>
+              <select
+                name="category"
+                value={newBudget.category}
+                onChange={handleChange}
+                className="select"
+                required
+              >
                 <option value="">Select category</option>
                 {categories.expense.map((category) => (
                   <option key={category} value={category}>
@@ -164,4 +163,3 @@ export default function BudgetManager() {
     </div>
   )
 }
-

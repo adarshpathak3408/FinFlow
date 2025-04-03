@@ -3,13 +3,12 @@
 import { useState, useContext, useRef } from "react";
 import { TransactionContext } from "../context/TransactionContext";
 import { X, Copy, Check, Send, Share, Download } from "lucide-react";
-import { QRCodeSVG } from "qrcode.react"; // Updated import
+import { QRCodeSVG } from "qrcode.react";
 
 export default function ExpenseSharingModal({ transaction, onClose }) {
-  const { currency } = useContext(TransactionContext);
+  const { currency, convertCurrency } = useContext(TransactionContext);
 
   const [friends, setFriends] = useState([{ id: 1, name: "", email: "", share: 0 }]);
-
   const [copied, setCopied] = useState(false);
   const [sent, setSent] = useState(false);
   const [upiId, setUpiId] = useState("");
@@ -18,16 +17,15 @@ export default function ExpenseSharingModal({ transaction, onClose }) {
 
   const qrRef = useRef(null);
 
-  // Format currency for display
   const formatCurrency = (amount) => {
+    const convertedAmount = convertCurrency(amount)
     const formatter = new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: currency,
       minimumFractionDigits: 0,
       maximumFractionDigits: 2,
     });
-
-    return formatter.format(amount);
+    return formatter.format(convertedAmount);
   };
 
   // Add a new friend

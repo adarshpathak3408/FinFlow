@@ -6,7 +6,7 @@ import { Card } from "./ui/Card"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
 
 export default function LoanCalculator() {
-  const { currency } = useContext(TransactionContext)
+  const { currency, convertCurrency } = useContext(TransactionContext)
 
   const [loanDetails, setLoanDetails] = useState({
     principal: 100000,
@@ -17,23 +17,16 @@ export default function LoanCalculator() {
   const [emiDetails, setEmiDetails] = useState(null)
   const [amortizationSchedule, setAmortizationSchedule] = useState([])
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target
     setLoanDetails({ ...loanDetails, [name]: Number(value) })
   }
 
-  // Calculate EMI and amortization schedule
   const calculateEMI = () => {
     const { principal, interestRate, tenure } = loanDetails
 
-    // Monthly interest rate
     const monthlyRate = interestRate / 12 / 100
-
-    // EMI calculation formula: P * r * (1+r)^n / ((1+r)^n - 1)
     const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, tenure)) / (Math.pow(1 + monthlyRate, tenure) - 1)
-
-    // Total amount and interest
     const totalAmount = emi * tenure
     const totalInterest = totalAmount - principal
 
@@ -43,7 +36,6 @@ export default function LoanCalculator() {
       totalInterest: totalInterest,
     })
 
-    // Generate amortization schedule
     const schedule = []
     let remainingPrincipal = principal
 
@@ -64,19 +56,17 @@ export default function LoanCalculator() {
     setAmortizationSchedule(schedule)
   }
 
-  // Format currency for display
   const formatCurrency = (amount) => {
+    const convertedAmount = convertCurrency(amount)
     const formatter = new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: currency,
       minimumFractionDigits: 0,
       maximumFractionDigits: 2,
     })
-
-    return formatter.format(amount)
+    return formatter.format(convertedAmount)
   }
 
-  // Custom tooltip for chart
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       return (
@@ -95,7 +85,7 @@ export default function LoanCalculator() {
     <div className="space-y-6">
       <Card className="p-4 bg-white dark:bg-slate-800 rounded-lg shadow">
         <h3 className="text-lg font-semibold mb-4">Loan & EMI Calculator</h3>
-
+        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
             <label className="block text-sm font-medium mb-1">Loan Amount ({currency})</label>
@@ -221,4 +211,3 @@ export default function LoanCalculator() {
     </div>
   )
 }
-

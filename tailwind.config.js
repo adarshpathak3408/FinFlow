@@ -1,12 +1,20 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: 'var(--color-primary)',
+          dark: 'var(--color-primary-dark)',
+        },
+        secondary: {
+          DEFAULT: 'var(--color-secondary)',
+          dark: 'var(--color-secondary-dark)',
+        },
+      },
+    },
   },
   plugins: [],
-}
-
+};

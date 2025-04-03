@@ -19,19 +19,17 @@ import {
 } from "recharts"
 
 export default function ExpenseChart() {
-  const { getExpensesByCategory, currency } = useContext(TransactionContext)
+  const { getExpensesByCategory, currency, convertCurrency } = useContext(TransactionContext)
   const { isDarkMode } = useContext(ThemeContext)
   const [chartType, setChartType] = useState("pie")
 
   const expensesByCategory = getExpensesByCategory()
 
-  // Format data for charts
   const chartData = Object.entries(expensesByCategory).map(([category, amount]) => ({
     name: category,
     value: amount,
   }))
 
-  // Colors for pie chart
   const COLORS = [
     "#0088FE",
     "#00C49F",
@@ -45,17 +43,16 @@ export default function ExpenseChart() {
     "#FFC107",
   ]
 
-  // Format currency for tooltip
   const formatCurrency = (value) => {
+    const convertedValue = convertCurrency(value)
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: currency,
       minimumFractionDigits: 0,
       maximumFractionDigits: 2,
-    }).format(value)
+    }).format(convertedValue)
   }
 
-  // Custom tooltip for charts
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       return (
@@ -132,4 +129,3 @@ export default function ExpenseChart() {
     </div>
   )
 }
-
